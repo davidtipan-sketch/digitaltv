@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>DigitalTV Cañar</title>
+  <meta name="description" content="Canal de TV IP de Cañar - DigitalTV Cañar" />
+
+  <style>
+    :root{
+      /* Paleta inspirada en la bandera de Cañar (azul, amarillo, rojo) */
+      --azul: #004aad;
+      --amarillo: #f5c400;
+      --rojo: #d21f3c;
+      --bg-dark: #0b1220;
+      --text: #f7f7f7;
+      --muted: #cfd6e4;
+
+      /* Cambia esta URL por tu imagen (local o de Internet) */
+      --bg-image: url('https://images.unsplash.com/photo-1496307042754-b4aa456c4a2d?q=80&w=1600&auto=format&fit=crop'); /* reemplaza por tu foto de Ingapirca o la que gustes */
+    }
+
+    /* Reset y tipografía */
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0}
+    body{
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, "Noto Sans", "Helvetica Neue", sans-serif;
+      color: var(--text);
+      background: var(--bg-dark);
+      line-height: 1.5;
+    }
+
+    /* Banda tricolor superior */
+    .flag-bar{
+      display:grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      height: 6px;
+      position: sticky;
+      top: 0; z-index: 1000;
+    }
+    .flag-bar div:nth-child(1){background: var(--azul)}
+    .flag-bar div:nth-child(2){background: var(--amarillo)}
+    .flag-bar div:nth-child(3){background: var(--rojo)}
+
+    header{
+      background: linear-gradient(90deg, var(--azul), var(--amarillo), var(--rojo));
+      color: #0b0b0b;
+    }
+    .nav{
+      max-width: 1200px; margin: 0 auto; padding: 14px 16px;
+      display:flex; align-items:center; gap:12px; flex-wrap:wrap;
+      justify-content: space-between;
+    }
+    .brand{
+      display:flex; align-items:center; gap:12px; color:#0b0b0b; text-decoration:none;
+      font-weight: 800; letter-spacing:.3px;
+    }
+    .brand .logo{
+      width:40px; height:40px; border-radius:10px; background:#fff; display:grid; place-items:center;
+      font-weight:900; border:2px solid rgba(0,0,0,.15);
+    }
+    .brand span{font-size: clamp(1.1rem, 3vw, 1.4rem)}
+
+    nav ul{list-style:none; display:flex; gap:16px; margin:0; padding:0; flex-wrap:wrap}
+    nav a{
+      text-decoration:none; color:#0b0b0b; font-weight:700; padding:8px 12px; border-radius:10px;
+      background: rgba(255,255,255,.5);
+      transition: transform .15s ease, background .2s ease;
+    }
+    nav a:hover{ transform: translateY(-2px); background:#fff; }
+
+    /* Hero con imagen de fondo */
+    .hero{
+      min-height: 58vh;
+      display:grid; place-items:center; text-align:center; padding: 48px 16px;
+      background:
+        linear-gradient(to bottom, rgba(0,0,0,.55), rgba(11,18,32,.85)),
+        var(--bg-image);
+      background-size: cover; background-position: center; background-attachment: fixed;
+      border-bottom: 1px solid rgba(255,255,255,.08);
+    }
+    .hero h1{ font-size: clamp(2rem, 6vw, 3rem); margin: 0 0 8px; }
+    .hero p{ color: var(--muted); margin: 0 0 22px; }
+
+    .cta{
+      display:flex; gap:12px; flex-wrap:wrap; justify-content:center;
+    }
+    .btn{
+      appearance:none; border:0; padding:12px 16px; border-radius:12px;
+      font-weight:800; cursor:pointer; text-decoration:none; display:inline-flex; align-items:center; gap:8px;
+      background:#ffffff; color:#0b0b0b; box-shadow: 0 6px 16px rgba(0,0,0,.25);
+      transition: transform .1s ease, box-shadow .1s ease;
+    }
+    .btn:hover{ transform: translateY(-2px); box-shadow: 0 10px 22px rgba(0,0,0,.3); }
+    .btn.live{ background: var(--rojo); color:#fff; }
+    .btn.day{ background: var(--azul); color:#fff; }
+    .btn.premium{ background: var(--amarillo); color:#0b0b0b; }
+
+    /* Secciones */
+    .container{ max-width: 1200px; margin: 0 auto; padding: 36px 16px; }
+    .grid-2{ display:grid; grid-template-columns: 1fr; gap: 24px; }
+    @media(min-width: 900px){ .grid-2{ grid-template-columns: 1.2fr .8fr; } }
+
+    h2.section-title{
+      font-size: clamp(1.4rem, 4vw, 2rem);
+      margin: 0 0 16px;
+      border-left: 10px solid var(--azul);
+      padding-left: 12px;
+    }
+
+    .card{
+      background: rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:16px; padding:18px;
+      box-shadow: 0 10px 30px rgba(0,0,0,.25);
+    }
+    .card + .card{ margin-top: 14px; }
+
+    /* Buzón ciudadano */
+    form label{ display:block; margin: 8px 0 6px; font-weight:700; }
+    input, textarea{
+      width:100%; padding:12px; border-radius:10px; border:1px solid rgba(255,255,255,.18);
+      background: rgba(255,255,255,.06); color: var(--text);
+    }
+    textarea{ min-height: 120px; resize: vertical; }
+    .form-row{ display:grid; gap:12px; grid-template-columns: 1fr; }
+    @media(min-width:700px){ .form-row{ grid-template-columns: 1fr 1fr; } }
+
+    /* Sponsors */
+    .sponsors{
+      display:grid; grid-template-columns: repeat(2, 1fr); gap:16px;
+    }
+    @media(min-width:700px){ .sponsors{ grid-template-columns: repeat(4, 1fr); } }
+    .sponsor{
+      background:#fff; color:#000; border-radius:14px; padding:14px;
+      display:grid; place-items:center; min-height:86px;
+      font-weight:800; letter-spacing:.3px;
+    }
+
+    /* Footer */
+    footer{
+      border-top: 1px solid rgba(255,255,255,.08);
+      background: #0a0f1a;
+      color: var(--muted);
+    }
+    .footer-inner{ max-width:1200px; margin:0 auto; padding:22px 16px; display:grid; gap:10px; }
+    .small{ font-size:.92rem; }
+
+    /* Accesibilidad y focus */
+    a, button{ outline: none; }
+    a:focus, button:focus, input:focus, textarea:focus{
+      box-shadow: 0 0 0 3px rgba(245,196,0,.45);
+    }
+  </style>
+</head>
+<body>
+  <div class="flag-bar" aria-hidden="true">
+    <div></div><div></div><div></div>
+  </div>
+
+  <header>
+    <div class="nav" role="navigation" aria-label="Navegación principal">
+      <a class="brand" href="#inicio">
+        <div class="logo" aria-hidden="true">DT</div>
+        <span>DigitalTV Cañar</span>
+      </a>
+      <nav>
+        <ul>
+          <li><a href="#mision">Misión</a></li>
+          <li><a href="#vision">Visión</a></li>
+          <li><a href="#quienes">Quiénes somos</a></li>
+          <li><a href="#contactos">Contactos</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero" id="inicio" aria-label="Portada con imagen de fondo">
+    <div>
+      <h1>DigitalTV Cañar</h1>
+      <p>TV IP desde Cañar para el mundo: información, cultura y programación en tiempo real.</p>
+      <div class="cta">
+        <a class="btn day" href="#programacion-dia">📅 Programación del día</a>
+        <a class="btn live" href="#programacion-en-vivo">🔴 Programación en vivo</a>
+        <a class="btn premium" href="#login">⭐ Contenido Premium</a>
+      </div>
+    </div>
+  </section>
+
+  <main class="container">
+    <section class="grid-2" id="info">
+      <div>
+        <h2 id="mision" class="section-title">Misión</h2>
+        <div class="card">
+          <p>Producir y difundir contenidos audiovisuales de calidad que fortalezcan la identidad cañarense y aporten a la educación, cultura y desarrollo local.</p>
+        </div>
+
+        <h2 id="vision" class="section-title">Visión</h2>
+        <div class="card">
+          <p>Ser el canal IP referente de la región, innovando en experiencias interactivas y cobertura de eventos, conectando a Cañar con Ecuador y el mundo.</p>
+        </div>
+
+        <h2 id="quienes" class="section-title">Quiénes somos</h2>
+        <div class="card">
+          <p>Somos un equipo multidisciplinario de periodistas, realizadores y técnicos comprometidos con la verdad y el servicio a la comunidad.</p>
+        </div>
+      </div>
+
+      <aside>
+        <h2 class="section-title">Patrocinadores</h2>
+        <div class="card">
+          <div class="sponsors" aria-label="Logos de patrocinadores">
+            <!-- Reemplaza el texto por <img src="..." alt="Patrocinador X" /> -->
+            <div class="sponsor">Patrocinador A</div>
+            <div class="sponsor">Patrocinador B</div>
+            <div class="sponsor">Patrocinador C</div>
+            <div class="sponsor">Patrocinador D</div>
+          </div>
+        </div>
+      </aside>
+    </section>
+
+    <section id="programacion-dia" class="container">
+      <h2 class="section-title">Programación del día</h2>
+      <div class="card">
+        <p>Conecta tu endpoint o embed aquí. Ejemplo: iframe o lista generada vía API.</p>
+        <!-- Ejemplo de iframe (reemplaza src por tu endpoint) -->
+        <!-- <iframe title="Programación del día" src="https://tu-endpoint/epg/hoy" width="100%" height="420" frameborder="0"></iframe> -->
+      </div>
+    </section>
+
+    <section id="programacion-en-vivo" class="container">
+      <h2 class="section-title">Programación en vivo</h2>
+      <div class="card">
+        <p>Inserta aquí tu reproductor o enlace HLS/DASH.</p>
+        <!-- Ejemplo HLS con hls.js (si lo agregas) o un simple enlace -->
+        <!-- <video id="player" controls playsinline width="100%"></video> -->
+        <!-- <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script> -->
+        <!-- <script>
+          if (Hls.isSupported()) {
+            const hls = new Hls();
+            hls.loadSource('https://tu-servidor/stream/index.m3u8');
+            hls.attachMedia(document.getElementById('player'));
+          }
+        </script> -->
+        <p><a class="btn live" href="https://tu-servidor/stream/index.m3u8">Abrir stream</a></p>
+      </div>
+    </section>
+
+    <section id="login" class="container">
+      <h2 class="section-title">Contenido Premium</h2>
+      <div class="card">
+        <p>Inicia sesión para acceder al contenido premium (suscriptores):</p>
+        <form onsubmit="event.preventDefault(); alert('Demo de login: integra tu backend o identidad (OAuth/JWT).');">
+          <div class="form-row">
+            <div>
+              <label for="email">Correo</label>
+              <input id="email" type="email" placeholder="tucorreo@ejemplo.com" required />
+            </div>
+            <div>
+              <label for="pass">Contraseña</label>
+              <input id="pass" type="password" placeholder="••••••••" required />
+            </div>
+          </div>
+          <div style="margin-top:12px">
+            <button class="btn premium" type="submit">Acceder</button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <section id="buzon" class="container">
+      <h2 class="section-title">Buzón ciudadano</h2>
+      <div class="card">
+        <form onsubmit="enviarBuzon(event)">
+          <div class="form-row">
+            <div>
+              <label for="nombre">Nombre</label>
+              <input id="nombre" type="text" placeholder="Tu nombre" required />
+            </div>
+            <div>
+              <label for="telefono">Teléfono</label>
+              <input id="telefono" type="tel" placeholder="+593 ..." />
+            </div>
+          </div>
+          <label for="asunto">Asunto</label>
+          <input id="asunto" type="text" placeholder="Tema de tu mensaje" required />
+          <label for="mensaje">Mensaje</label>
+          <textarea id="mensaje" placeholder="Escribe tu sugerencia o denuncia ciudadana..." required></textarea>
+          <div style="margin-top:12px; display:flex; gap:10px; flex-wrap:wrap;">
+            <button class="btn" type="submit">Enviar</button>
+            <button class="btn" type="reset">Limpiar</button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <section id="contactos" class="container">
+      <h2 class="section-title">Contactos</h2>
+      <div class="card">
+        <p><strong>Email:</strong> contacto@digitaltvcanar.ec</p>
+        <p><strong>Dirección:</strong> Cañar, Ecuador</p>
+        <p><strong>WhatsApp:</strong> +593 9 9999 9999</p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+      <div class="small">© <span id="year"></span> DigitalTV Cañar. Todos los derechos reservados.</div>
+      <div class="small">Desarrollado con ❤️ desde Cañar. </div>
+    </div>
+  </footer>
+
+  <script>
+    // Año dinámico
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Demo de envío del Buzón (reemplaza por tu API/Email)
+    function enviarBuzon(e){
+      e.preventDefault();
+      const data = {
+        nombre: document.getElementById('nombre').value,
+        telefono: document.getElementById('telefono').value,
+        asunto: document.getElementById('asunto').value,
+        mensaje: document.getElementById('mensaje').value
+      };
+      console.log("Buzón ciudadano (demo):", data);
+      alert('¡Gracias! Tu mensaje se envió.');
+      e.target.reset();
+    }
+  </script>
+</body>
+</html>
